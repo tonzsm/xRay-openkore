@@ -6,7 +6,7 @@ logs
 DUMP.txt
 
 # Plugin files
-/profiles
+#/profiles
 
 # Backup files
 *~
@@ -53,9 +53,9 @@ tables/iRO/Restart/resnametable-custom.txt
 tables/iRO/Restart/skillnametable-custom.txt
 
 # Auto-generated files.
-tables/**/portalsLOS.txt
-tables/pserver/**/portalsLOS.txt
-tables/**/npcs.txt
-tables/**/monsters.txt
-*.xpm
-*.weight
+#tables/**/portalsLOS.txt
+#tables/pserver/**/portalsLOS.txt
+#tables/**/npcs.txt
+#tables/**/monsters.txt
+#*.xpm
+#*.weight
