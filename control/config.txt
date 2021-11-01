@@ -182,7 +182,7 @@ followBot 0
 
 itemsTakeAuto 2
 itemsTakeAuto_party 0
-itemsGatherAuto 0
+itemsGatherAuto 2
 itemsGatherAuto_notInTown 0
 itemsMaxWeight 89
 itemsMaxWeight_sellOrStore 48
@@ -239,8 +239,8 @@ shop_useSkill 1
 buyerShopAuto_open 0
 buyerShop_random 0
 
-sitAuto_hp_lower 0
-sitAuto_hp_upper 0
+sitAuto_hp_lower 40
+sitAuto_hp_upper 100
 sitAuto_sp_lower 0
 sitAuto_sp_upper 0
 sitAuto_follow 0
@@ -266,6 +266,8 @@ teleportAuto_sp 0
 teleportAuto_idle 0
 teleportAuto_portal 0
 teleportAuto_search 0
+teleport_search 0
+teleport_search_minSp 10
 teleportAuto_minAggressives 0
 teleportAuto_minAggressivesInLock 0
 teleportAuto_onlyWhenSafe 0
@@ -294,7 +296,7 @@ teleportAuto_item2
 
 dealAuto 1
 dealAuto_names
-partyAuto 0
+partyAuto 1
 partyAutoShare 0
 partyAutoShareItem 0
 partyAutoShareItemDiv 0
@@ -345,7 +347,7 @@ chatTitleOversize 0
 shopTitleOversize 0
 buyerShopTitleOversize 0
 
-sleepTime 50000
+sleepTime 10000
 
 ignoreAll 0
 itemHistory 0
