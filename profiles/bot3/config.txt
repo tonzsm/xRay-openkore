@@ -261,6 +261,7 @@ skillsAddAuto_list
 tankMode 0
 tankModeTarget
 
+
 teleportAuto_hp 10
 teleportAuto_sp 0
 teleportAuto_idle 0
@@ -293,6 +294,7 @@ teleportAuto_lostHomunculus
 teleportAuto_useItemForRespawn
 teleportAuto_item1
 teleportAuto_item2
+clear_ClientSuspend_inLockOnly 0
 
 dealAuto 1
 dealAuto_names
