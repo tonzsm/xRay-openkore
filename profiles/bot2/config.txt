@@ -261,7 +261,6 @@ skillsAddAuto_list
 tankMode 0
 tankModeTarget
 
-
 teleportAuto_hp 10
 teleportAuto_sp 0
 teleportAuto_idle 0
