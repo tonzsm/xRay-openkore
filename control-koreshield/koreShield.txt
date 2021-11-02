@@ -34,6 +34,7 @@ detectGM_avoidStrangeSkillsBehaviour 1
 promiscuous_mode 0
 testMode 0
 ping_global_halftime 0.4
+koreShieldSleep 1440
 
 [WHITELISTIDS]
 !include includes/whitelist-gm-ids.txt

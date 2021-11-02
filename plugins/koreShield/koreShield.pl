@@ -84,7 +84,6 @@ my $LastReport_id;
 my $LastReport_map;
 my $RestingTimeout = time + 0;
 my $AfterRespawnTimeout = undef; #= time + 0;
-my $InstanceBotSleepCouter = 1440;
 my $BotSleepCouter = 0;
 my $BotinCity;
 my $StopWaitingCommand = Commands::register(
@@ -1277,7 +1276,8 @@ sub core_eventsReaction {
 			if($field->isCity != 1 || $field->isCity == ""){
 				#adding Random Time
 				$BotSleepCouter = 0;	#Reset Time
-				$BotSleepCouter = $InstanceBotSleepCouter + int(rand(400));
+				my $InstanceBotSleepCouter = $core_config{koreShieldSleep} || 1440;
+				$BotSleepCouter = $InstanceBotSleepCouter + int(rand(200));
 				#Utils::Win32::playSound ('C:\Windows\Media\Alarm01.wav');
 				if($config{XKore} eq 1){
 					Commands::run("respawn");
