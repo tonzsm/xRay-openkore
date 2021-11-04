@@ -78,7 +78,7 @@ attackMinPortalDistance 4
 attackUseWeapon 1
 attackNoGiveup 0
 attackCanSnipe 0
-attackCheckLOS 1
+attackCheckLOS 0
 attackRouteMaxPathDistance 13
 attackLooters 0
 attackChangeTarget 1
@@ -297,7 +297,7 @@ clear_ClientSuspend_inLockOnly 0
 
 dealAuto 1
 dealAuto_names
-partyAuto 1
+partyAuto 0
 partyAutoShare 0
 partyAutoShareItem 0
 partyAutoShareItemDiv 0
