@@ -3,7 +3,7 @@
 
 ######## Login options and server-specific options ########
 
-master Thailand - tRO: Chaos, Thor, Iris
+master
 server
 username
 password
