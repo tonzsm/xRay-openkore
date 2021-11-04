@@ -16,7 +16,7 @@ itemListType 1
 pinCode 1
 
 # http://roc.gnjoy.in.th/
-[Thailand - tRO: Chaos, Thor, Iris]
+[Thailand - tRO Classic]
 ip thro-acc1.gnjoy.in.th
 port 50001
 master_version 7
