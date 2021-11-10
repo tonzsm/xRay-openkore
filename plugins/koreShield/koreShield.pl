@@ -112,15 +112,35 @@ sub commandHandler {
 	my ($arg, @params) = split(/\s+/, $_[1]);
 	### parameter: Stop command
 	if ($arg eq 'go') {
-		warning decode("UTF-8","############## Let IT GO! เริ่มกระบวนการ บอทอัตโนมัติ โดยทันที  ขอให้โชคดี  ###########\n");
-		if($BotSleepCouter > 5){
-			$BotSleepCouter = 5;
+		if ($net->getState() eq Network::IN_GAME()) {
+			warning decode("UTF-8","############## Let IT GO! เริ่มกระบวนการ บอทอัตโนมัติ โดยทันที  ขอให้โชคดี  ###########\n");
+			if($BotSleepCouter > 5){
+				$BotSleepCouter = 5;
+			}
+		}else {
+			warning decode("UTF-8",">>>> ท่านต้อง Login game ก่อนดิ  <<<<\n");
 		}
 	}
 	if ($arg eq 'RestTesting') {
-		warning decode("UTF-8","############## Bot Resting ทดสอบการ จำศีล  ###########\n");
-		$ReportCount = 9;
-		&core_eventsReaction('direct_call');
+		if ($net->getState() eq Network::IN_GAME() && $field->name eq $config{lockMap}) {
+			warning decode("UTF-8","############## Bot Resting ทดสอบการ จำศีล  ###########\n");
+			$ReportCount = 9;
+			&core_eventsReaction('direct_call');
+		}else {
+			warning decode("UTF-8",">>>> ต้องอยู่ในเกม และ ใน lockMap ของ config.txt <<<<\n");
+		}
+	}
+	if ($arg eq 'ks-disable'){
+		if($config{koreShield} eq 0){
+			main::configModify('koreShield',1, 2);
+			message (decode("UTF-8"," เปิดระบบ ป้องกัน GM \n"));
+			message (decode("UTF-8"," เปิดระบบ ป้องกัน GM \n"));
+		}else {
+			main::configModify('koreShield',0, 2);
+			error (decode("UTF-8"," ระวัง คุณได้ปิดระบบ ป้องกัน GM \n"));
+			error (decode("UTF-8"," ระวัง คุณได้ปิดระบบ ป้องกัน GM \n"));				
+		}
+		
 	}
 }
 sub pushover {
@@ -313,12 +333,16 @@ sub core_start3 {
 	&RevokUtils::Parsers::parseSectionedFile('control-koreshield/koreShield.txt', \%core_databases);
 	%core_config = &RevokUtils::Parsers::parseConfigArray(\@{$core_databases{CONFIG}});
 	message sprintf("GM DB size: %s \n", scalar @{$core_databases{GMIDS}});
-}
-sub IngameDangerous{
-	 
-	#Commands::run("uneq 32");
-	#Commands::run("uneq 33");
-	#Commands::run("uneq 34");
+	
+	############ create koreshield in config.txt ############
+	if($config{koreShield} eq ""){
+		main::configModify('koreShield',1, 2);
+		message "Created koreShield enable status \n";
+		message "Default koreShield enable is  ".$config{koreShield}." \n";
+	}else {
+		message "Default koreShield enable is  ".$config{koreShield}." \n";
+	}
+	
 }
 sub cmdReload {
 	my (undef, $args) = @_;
@@ -787,8 +811,13 @@ sub ping_checkIds {
 		
 		#####Adding Counting left #######
 		if($BotSleepCouter <= 5){			
-			#Utils::Win32::playSound ('C:\Windows\Media\Windows Battery Low.wav');			
+			Utils::Win32::playSound ('C:\Windows\Media\Windows Battery Low.wav');			
 		}
+		### make sure AI is on ###
+		if($BotSleepCouter <= 2){			
+			Commands::run("ai auto");			
+		}
+		### End hidden ###
 		if($BotSleepCouter <= 0){
 			Commands::run("ai auto");
 			if($config{XKore} eq 0){
@@ -1271,7 +1300,7 @@ sub core_eventsReaction {
 	
 	if ($danger eq 'actor_found_normal' || grep {$_ eq $danger} ('direct_call','actor_found','actor_found_normal','gm_used_skill','perfect_hidden','player_muted', 'blacklisted_used_skill', 'chat_blocked')){
 		## Main Action of bot ##
-		if (!$core_config{testMode} && $ReportCount > 0) {
+		if ($config{koreShield} eq 1 && $ReportCount > 0) {
 			Commands::run("ai off");
 			if($field->isCity != 1 || $field->isCity == ""){
 				#adding Random Time

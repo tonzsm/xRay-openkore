@@ -64,6 +64,7 @@ use Commands;
 use Utils;
 use Translation qw/T TF/;
 use FileParsers;
+use Encode;
 
 our $CVS;
 our ($iterationTime, $updateUITime, $updateUITime2);
@@ -446,7 +447,15 @@ sub createMenuBar {
 	}, T('Exit to the character selection screen'));
 	$self->addMenu($opMenu, T('E&xit') . "\tCtrl-W", \&quit, T('Exit this program'));
 	$menu->Append($opMenu, T('P&rogram'));
-
+	
+	#Xray Option *Network::Receive::character_name = *Prontera::character_name;
+	my $XrayopMenu = new Wx::Menu;
+	$self->{mManual} = $self->addMenu($XrayopMenu, T('&'.decode("UTF-8","KS: ปิด / เปิด ป้องกัน GM")), \&disable_KS, T(decode("UTF-8"," ระวัง คุณได้ปิดระบบ ป้องกัน GM")));
+	$self->addMenu($XrayopMenu, T('&'.decode("UTF-8","KS: เลิก จำศีล")), \&bot_go, T(decode("UTF-8"," ไปเลย กลัวที่ใหนล่ะ")));
+	$self->{mManual} = $self->addMenu($XrayopMenu, T('&'.decode("UTF-8","KS: ทดสอบ ระบบจำศีล")), \&bot_testResting, T(decode("UTF-8"," ทดสอบ ตัว ต้องอยู่ที่ lockMap เท่านั้น")));
+	$XrayopMenu->AppendSeparator;
+	$menu->Append($XrayopMenu, T('X&ray Option'));
+	
 	# Info menu
 	my $infoMenu = new Wx::Menu;
 	$self->addMenu($infoMenu, T('&Status').'	Alt-S',	sub { Commands::run("s"); });
@@ -991,7 +1000,26 @@ sub updateItemList {
 ##################
 ## Callbacks
 ##################
-
+sub disable_KS {
+	my $self = shift;
+	Commands::run("bot ks-disable");
+	Utils::Win32::playSound ('C:\Windows\Media\Windows Battery Low.wav');
+	return;
+}
+sub bot_go {
+	my $self = shift;
+	Utils::Win32::playSound ('C:\Windows\Media\Windows Battery Low.wav');
+	Log::warning (decode("UTF-8"," ไปเลย กลัวที่่ใหนล่ะ \n"));
+	Commands::run("bot go");
+	return;
+}
+sub bot_testResting {
+	my $self = shift;
+	Utils::Win32::playSound ('C:\Windows\Media\Windows Battery Low.wav');
+	Log::warning (decode("UTF-8"," ทดสอบระบบ ป้องกัน GM \n"));
+	Commands::run("bot RestTesting");
+	return;
+}
 
 sub onInputEnter {
 	my $self = shift;
