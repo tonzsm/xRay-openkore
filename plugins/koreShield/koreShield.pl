@@ -195,7 +195,7 @@ my $commands_hooks = Commands::register(
 my $myHooks = Plugins::addHooks(
 	
 	['start3',	\&core_start3],
-	['AI_post', 								\&IngameDangerous],
+	#['AI_post', 								\&IngameDangerous],
 	# core
 	['packet/received_character_ID_and_Map',	\&core_mapServerInfo],
 	['packet/actor_info',						\&core_actorInfo], #changed from pre_
