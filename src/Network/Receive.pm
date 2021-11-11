@@ -3944,6 +3944,7 @@ sub login_pin_code_request {
 		message T("PIN code is correct.\n"), "success";
 	} elsif ($args->{flag} == 1) {
 		# PIN code query request.
+		sleep(3);
 		$accountID = $args->{accountID};
 		debug sprintf("Account ID: %s (%s)\n", unpack('V',$accountID), getHex($accountID));
 
@@ -6801,13 +6802,14 @@ sub item_appeared {
 	$item->{pos_to}{y} = $args->{y};
 	$itemsList->add($item) if ($mustAdd);
 
-	# Take item as fast as possible
-	if (AI::state == AI::AUTO && pickupitems($item->{name}, $item->{nameID}) == 2
+	# Take item as fast as possible 
+	if ($config{'fast_take_item'} eq 1 && AI::state == AI::AUTO && pickupitems($item->{name}, $item->{nameID}) == 2
 	 && ($config{'itemsTakeAuto'} || $config{'itemsGatherAuto'})
 	 && (!$config{itemsGatherAuto_notInTown} || !$field->isCity)
 	 && (percent_weight($char) < $config{'itemsMaxWeight'})
 	 && distance($item->{pos}, $char->{pos_to}) <= 5) {
 		$messageSender->sendTake($args->{ID});
+		warning TF("Fast item take activated. ! >>> ");
 	}
 
 	message TF("Item Appeared: %s (%d) x %d (%d, %d)\n", $item->{name}, $item->{binID}, $item->{amount}, $args->{x}, $args->{y}), "drop", 1;

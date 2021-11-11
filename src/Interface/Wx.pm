@@ -95,7 +95,7 @@ sub OnInit {
 		['mainLoop_pre',                        sub { $self->onUpdateUI(); }],
 		['captcha_file',                        sub { $self->onCaptcha(@_); }],
 		['packet/minimap_indicator',            sub { $self->onMapIndicator (@_); }],
-		['start3',                              sub { $interface->{mapViewer}->parsePortals(); }],
+		['start3',                              sub { Creat_fast_take_config(); $interface->{mapViewer}->parsePortals(); }],
 
 		# stat changes
 		['packet/map_changed',                  sub { $self->onSelfStatChange (@_); $self->onSlaveStatChange (@_); $self->onPetStatChange (@_); }],
@@ -449,12 +449,14 @@ sub createMenuBar {
 	$menu->Append($opMenu, T('P&rogram'));
 	
 	#Xray Option *Network::Receive::character_name = *Prontera::character_name;
-	my $XrayopMenu = new Wx::Menu;
-	$self->{mManual} = $self->addMenu($XrayopMenu, T('&'.decode("UTF-8","KS: ปิด / เปิด ป้องกัน GM")), \&disable_KS, T(decode("UTF-8"," ระวัง คุณได้ปิดระบบ ป้องกัน GM")));
-	$self->addMenu($XrayopMenu, T('&'.decode("UTF-8","KS: เลิก จำศีล")), \&bot_go, T(decode("UTF-8"," ไปเลย กลัวที่ใหนล่ะ")));
-	$self->{mManual} = $self->addMenu($XrayopMenu, T('&'.decode("UTF-8","KS: ทดสอบ ระบบจำศีล")), \&bot_testResting, T(decode("UTF-8"," ทดสอบ ตัว ต้องอยู่ที่ lockMap เท่านั้น")));
-	$XrayopMenu->AppendSeparator;
-	$menu->Append($XrayopMenu, T('X&ray Option'));
+	my $XraysopMenu = new Wx::Menu;
+	$self->{mManual} = $self->addMenu($XraysopMenu, T('&'.decode("UTF-8","KS: ปิด / เปิด ป้องกัน GM")), \&disable_KS, T(decode("UTF-8"," ระวัง คุณได้ปิดระบบ ป้องกัน GM")));
+	$self->addMenu($XraysopMenu, T('&'.decode("UTF-8","KS: เลิก จำศีล")), \&bot_go, T(decode("UTF-8"," ไปเลย กลัวที่ใหนล่ะ")));
+	$self->{mManual} = $self->addMenu($XraysopMenu, T('&'.decode("UTF-8","KS: ทดสอบ ระบบจำศีล")), \&bot_testResting, T(decode("UTF-8"," ทดสอบ ตัว ต้องอยู่ที่ lockMap เท่านั้น")));
+	$self->{mManual} = $self->addMenu($XraysopMenu, T('&'.decode("UTF-8","SRC: ปิด / เปิด เก็บของเร็ว")), \&disable_fast_take_item, T(decode("UTF-8"," ปิดการเก็บของเร็วเกินไป")));
+	$self->addMenu($XraysopMenu, T('&'.decode("UTF-8","SRC > ปิด / เปิด แจม !!")), \&steal_kill_funny, T(decode("UTF-8"," ปิดการเก็บของเร็วเกินไป")));
+	$XraysopMenu->AppendSeparator;
+	$menu->Append($XraysopMenu, T('X&rays Option'));
 	
 	# Info menu
 	my $infoMenu = new Wx::Menu;
@@ -1019,6 +1021,36 @@ sub bot_testResting {
 	Log::warning (decode("UTF-8"," ทดสอบระบบ ป้องกัน GM \n"));
 	Commands::run("bot RestTesting");
 	return;
+}
+sub disable_fast_take_item {
+	my $self = shift;
+	Utils::Win32::playSound ('C:\Windows\Media\Windows Battery Low.wav');
+	Log::warning (decode("UTF-8",">>>> การเก็บของเร็วเกินมนุษย์  <<<\n"));
+	
+	if($config{fast_take_item} eq 0){
+		main::configModify('fast_take_item',1, 2);
+		Log::error (decode("UTF-8"," ระวัง เปิดระบบ เก็บของเร็วเว่อ \n"));
+		Log::error (decode("UTF-8"," ระวัง เปิดระบบ เก็บของเร็วเว่อ \n"));
+	}else {
+		main::configModify('fast_take_item',0, 2);
+		Log::message (decode("UTF-8"," ปิด ระบบ เก็บของเร็ว เหมือนคนแล้ว ค่ะ \n"));
+		Log::message (decode("UTF-8"," ปิด ระบบ เก็บของเร็ว เหมือนคนแล้ว ค่ะ \n"));				
+	}
+	return;	
+}
+################ external sub Creat_fast_take_config ###########
+sub Creat_fast_take_config {
+	if($config{fast_take_item} eq ""){
+		main::configModify('fast_take_item',0, 2);
+		Log::message "Created fast_take_item enable status \n";
+		Log::message "Default fast_take_item enable is  ".$config{fast_take_item}." \n";
+	}else {
+		Log::message "Default fast_take_item enable is  ".$config{fast_take_item}." \n";
+	}
+}
+################ End external sub Creat_fast_take_config ###########
+sub steal_kill_funny {
+	Log::message (decode("UTF-8","ไม่่่มีจ้า ล้อเล่น 5555\n"));
 }
 
 sub onInputEnter {
