@@ -236,10 +236,10 @@ prt_are_in 54 13 arena_room 100 77
 #anthell02 171 170 moc_fild20 333 315
 #moc_fild20 156 143 anthell01 35 263
 #moc_fild20 337 315 anthell02 168 170
-anthell01 35 267 cmd_fild08 335 355
-anthell02 171 170 cmd_fild08 344 82
-cmd_fild08 335 355 anthell01 35 263
-cmd_fild08 348 82 anthell02 171 170
+#anthell01 35 267 cmd_fild08 335 355
+#anthell02 171 170 cmd_fild08 344 82
+#cmd_fild08 335 355 anthell01 35 263
+#cmd_fild08 348 82 anthell02 171 170
 
 # Morroc area (Episode 12)
 # moc_fild01 84 19 moc_fild20 209 333
@@ -267,15 +267,15 @@ cmd_fild08 348 82 anthell02 171 170
 # Morroc area (before Episode 12)
 anthell01 35 267 moc_fild04 219 327
 anthell02 171 169 moc_fild15 258 253
-moc_fild01 68 16 moc_fild04 314 381
+moc_fild01 87 16 moc_fild04 314 381
 moc_fild01 101 16 moc_fild04 314 381
 moc_fild04 14 122 moc_fild05 384 126
 moc_fild04 19 206 moc_fild05 378 208
 moc_fild04 92 381 prt_fild09 246 16
 moc_fild04 175 18 moc_fild08 170 383
 moc_fild04 219 327 anthell01 35 267
-moc_fild04 314 381 moc_fild01 68 16
-moc_fild04 336 381 moc_fild01 68 16
+moc_fild04 314 381 moc_fild01 87 16
+moc_fild04 336 381 moc_fild01 87 16
 moc_fild05 18 136 moc_fild06 377 316
 moc_fild05 18 154 moc_fild06 377 316
 moc_fild05 82 16 moc_fild09 80 369
@@ -1131,7 +1131,7 @@ iz_dun04 26 24 iz_dun03 264 245
 izlu2dun 108 83 iz_dun00 168 173
 izlude 30 78 prt_fild08 371 212
 izlude 52 140 izlude_in 74 158
-izlude 109 151 izlude_in 65 84
+izlude 110 182 izlude_in 65 87
 izlude 148 148 izlude_in 116 46
 izlude 216 129 izlude_in 148 127
 izlude_in 65 84 izlude 109 151
@@ -1399,7 +1399,6 @@ payon 151 127 payon_in01 56 53
 payon 136 158 payon_in01 20 129
 payon 130 169 payon_in01 13 139
 payon 189 233 payon_in03 149 39
-payon 187 233 payon_in03 149 39
 payon 270 152 payon_in01 90 9
 pay_arche 36 131 pay_dun00 21 186
 pay_arche 81 17 payon 228 329
