@@ -35,6 +35,7 @@ promiscuous_mode 0
 testMode 0
 ping_global_halftime 0.4
 koreShieldSleep 1440
+disable_after_respawn_action
 
 [WHITELISTIDS]
 !include includes/whitelist-gm-ids.txt

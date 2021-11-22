@@ -1263,7 +1263,7 @@ sub core_eventsReaction {
 			warning sprintf("%s has been banned or teleported !\n", $bus_args->{player}), "koreShield";
 		}
 		
-		warning sprintf("BINGO Reason: %s !\n", $bus_args->{danger}), "koreShield";
+		#warning sprintf("BINGO Reason: %s !\n", $bus_args->{danger}), "koreShield";
 	} else {
 		my %args;
 		$args{player} = $char->name if $char;
@@ -1275,7 +1275,7 @@ sub core_eventsReaction {
 			$args{map} = $core_map;
 		}
 		
-		warning "adding map ".$core_map."to dangerous list \n";
+		#warning "adding map ".$core_map."to dangerous list \n";
 		$ping_dangerousMaps{$core_map} = time;
 		
 		$args{server} = $config{master};
@@ -1285,13 +1285,13 @@ sub core_eventsReaction {
 		#error("Sent notification to other bots.", "koreShield");
 		#error sprintf("Reason: %s !\n", $danger), "koreShield";
 	}
-	error "================ Reason Call: ".$danger." ================= \n";
+	error decode("UTF-8","================  ประเภทเหตุ เตือนภัย ".$danger."  ================\n");
 	
 	######### Enable Alert the whole world ###############
 	my $same_map = 0;	
 	if ($danger eq 'actor_found_normal' && $bus_args->{map} eq $field->baseName && $same_map eq 1) {
-		warning "From other bot Ping notification \n";
-		warning "Found GM in the same map \n";
+		warning decode("UTF-8",">>>>>  บอท ตัวอื่นได้ แจ้งงเตือน  <<<<<\n");
+		warning decode("UTF-8",">>>>>  พบ GM ในแผนที่เดียวกัน  <<<<<\n");
 		$ReportCount++;
 	}elsif($danger eq 'actor_found_normal' && $same_map ne 1) {
 		$ReportCount++;
@@ -1300,8 +1300,7 @@ sub core_eventsReaction {
 	
 	if ($danger eq 'actor_found_normal' || grep {$_ eq $danger} ('direct_call','actor_found','actor_found_normal','gm_used_skill','perfect_hidden','player_muted', 'blacklisted_used_skill', 'chat_blocked')){
 		## Main Action of bot ##
-		if ($config{koreShield} eq 1 && $ReportCount > 0) {
-			Commands::run("ai off");
+		if ($config{koreShield} eq 1 && $ReportCount > 0) {			
 			if($field->isCity != 1 || $field->isCity == ""){
 				#adding Random Time
 				$BotSleepCouter = 0;	#Reset Time
@@ -1336,12 +1335,8 @@ sub core_eventsReaction {
 				
 		#Commands::run("ai manual");
 		#Commands::run("do quit");
-	} elsif ($danger eq 'actor_found_normal') {
 		
-		warning "From other bot Ping notification \n";
-		$ReportCount++;
-		
-	} elsif (grep {$_ eq $danger} ( 'forced_teleport', 'forced_teleport_same_cell')){
+	} elsif (grep {$_ eq $danger} ( 'forced_teleport_false', 'forced_teleport_same_cell')){
 		my $lockMap = $config{lockMap};
 		if($lockMap ne ""){
 			#Utils::Win32::playSound ('C:\Windows\Media\Alarm04.wav');
@@ -1357,6 +1352,7 @@ sub AfterRespawnMaploaded{
 	}
 }
 sub AfterRespawn{
+	return if ($core_config{disable_after_respawn_action});
 	########## stop time ########
 	if($AfterRespawn_i <= 3) {
 		warning "After respawn : >>>>> Action <<<<< \n" ;
