@@ -454,7 +454,8 @@ sub createMenuBar {
 	$self->addMenu($XraysopMenu, T('&'.decode("UTF-8","KS: เลิก จำศีล")), \&bot_go, T(decode("UTF-8"," ไปเลย กลัวที่ใหนล่ะ")));
 	$self->{mManual} = $self->addMenu($XraysopMenu, T('&'.decode("UTF-8","KS: ทดสอบ ระบบจำศีล")), \&bot_testResting, T(decode("UTF-8"," ทดสอบ ตัว ต้องอยู่ที่ lockMap เท่านั้น")));
 	$self->{mManual} = $self->addMenu($XraysopMenu, T('&'.decode("UTF-8","SRC: ปิด / เปิด เก็บของเร็ว")), \&disable_fast_take_item, T(decode("UTF-8"," ปิดการเก็บของเร็วเกินไป")));
-	$self->addMenu($XraysopMenu, T('&'.decode("UTF-8","SRC > ปิด / เปิด แจม !!")), \&steal_kill_funny, T(decode("UTF-8"," ปิดการเก็บของเร็วเกินไป")));
+	$self->addMenu($XraysopMenu, T('&'.decode("UTF-8","SRC > ปิด / เปิด แจม !!")), \&steal_kill_funny, T(decode("UTF-8"," ไม่มีแจม")));
+	$self->addMenu($XraysopMenu, T('&'.decode("UTF-8","Alarm Clock > ปิด / เปิด ")), \&disable_alarm, T(decode("UTF-8","ปิด เปิด การตั้งเวลา")));
 	$XraysopMenu->AppendSeparator;
 	$menu->Append($XraysopMenu, T('X&rays Option'));
 	
@@ -1051,6 +1052,21 @@ sub Creat_fast_take_config {
 ################ End external sub Creat_fast_take_config ###########
 sub steal_kill_funny {
 	Log::message (decode("UTF-8","ไม่่่มีจ้า ล้อเล่น 5555\n"));
+}
+
+sub disable_alarm {
+	my $self = shift;
+	Utils::Win32::playSound ('C:\Windows\Media\Windows Battery Low.wav');	
+	if($config{alarm_disable} eq 0){
+		main::configModify('alarm_disable',1, 2);
+		Log::message (decode("UTF-8"," เปิด การตั้งเวลาเตือน ค่ะ \n"));
+		Log::message (decode("UTF-8"," เปิด การตั้งเวลาเตือน ค่ะ \n"));
+	}else {
+		main::configModify('alarm_disable',0, 2);
+		Log::message (decode("UTF-8"," ปิด การตั้งเวลาเตือน ค่ะ \n"));
+		Log::message (decode("UTF-8"," ปิด การตั้งเวลาเตือน ค่ะ \n"));				
+	}
+	return;	
 }
 
 sub onInputEnter {
