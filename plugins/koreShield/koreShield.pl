@@ -76,6 +76,7 @@ use Data::Dumper;
 
 my $dealCount = 0;
 
+my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
 my $pushover_timeout = 0;
 my $allowAfterRespawn = 0;
 my $ReportCount = 0;
@@ -195,6 +196,7 @@ my $commands_hooks = Commands::register(
 my $myHooks = Plugins::addHooks(
 	
 	['start3',	\&core_start3],
+	['initialized',\&initialized_config],
 	#['AI_post', 								\&IngameDangerous],
 	# core
 	['packet/received_character_ID_and_Map',	\&core_mapServerInfo],
@@ -230,6 +232,7 @@ my $myHooks = Plugins::addHooks(
 	['configModify',							\&core_overrideModifiedKey],
 	# ping
 	['mainLoop_pre',							\&ping_checkIds],
+	['mainLoop_post',							\&Alarm_me],
 
 	# detectgm
 	['packet_pre/item_skill',					\&detectGM_flyOrButterflyWing_tpflag],
@@ -300,7 +303,83 @@ my $AfterRespawn_i = 0;
 if ($::net) {
  core_start3();
 }
-
+sub initialized_config {
+	############ create koreshield in config.txt ############
+	if($config{koreShield} eq ""){
+		main::configModify('koreShield',1, 2);
+		message "Created koreShield enable status \n";
+		message "Default koreShield enable is  ".$config{koreShield}." \n";
+	}else {
+		message "Default koreShield enable is  ".$config{koreShield}." \n";
+	}
+	############ create koreshield alarm_disable in config.txt ############
+	if($config{alarm_disable} eq ""){
+		main::configModify('alarm_disable',0, 2);
+		Log::message "Created alarm_disable enable status \n";
+		Log::message "Default alarm_disable enable is  ".$config{fast_take_item}." \n";
+	}else {
+		Log::message "Default alarm_disable enable is  ".$config{fast_take_item}." \n";
+	}
+	
+	############ create koreshield alarm_time in config.txt ############
+	if($config{alarm_time} eq ""){
+		main::configModify('alarm_time',"", 2);
+		Log::message "Created alarm_time enable status \n";
+		Log::message "Default alarm_time enable is  ".$config{fast_take_item}." \n";
+	}else {
+		Log::message "Default alarm_time enable is  ".$config{fast_take_item}." \n";
+	}
+	############ create koreshield maintenance_date in config.txt ############
+	if($config{maintenance_date} eq ""){
+		main::configModify('maintenance_date',"", 2);
+		Log::message "Created maintenance_date enable status \n";
+		Log::message "Default maintenance_date enable is  ".$config{fast_take_item}." \n";
+	}else {
+		Log::message "Default maintenance_date enable is  ".$config{fast_take_item}." \n";
+	}
+	
+	############ create koreshield maintenance_date in config.txt ############
+	if($config{alarm_opk_quit} eq ""){
+		main::configModify('alarm_opk_quit',1, 2);
+		Log::message "Created alarm_opk_quit enable status \n";
+		Log::message "Default alarm_opk_quit enable is  ".$config{fast_take_item}." \n";
+	}else {
+		Log::message "Default alarm_opk_quit enable is  ".$config{fast_take_item}." \n";
+	}
+}
+my $alarm_time = time;
+my @command_alarm_task = ("tele", "tele", "tele", "charselect", "charselect", "charselect", "charselect", "charselect", "charselect", "charselect","quit");
+sub Alarm_me {
+	return if (!main::timeOut($alarm_time, 3));
+	$alarm_time = time;
+	return if ($config{alarm_disable});
+	return if (!$config{alarm_time} && !$config{maintenance_date});
+	################### Alarm Method #######################
+	my @stops = split(' ', $config{alarm_time});	
+	for my $stop (@stops){
+		my @maintenance_date = split(' ', $config{maintenance_date});
+		my $maintenant_time = @maintenance_date[0];
+		my $maintenant_day = @maintenance_date[1];	
+		my $now = sprintf("%02d:%02d", $hour,$min);
+		#message "Now $now !!!! Stop $stop \n";
+		if($now eq $stop || ($now eq $maintenant_time && $maintenant_day eq $wday)){
+			#Action after alarm
+			warning decode("UTF-8"," >>>>>>>>>>>>>>>> คำเตือน เวลาปลุกทำงาน <<<<<<<<<<<<<<<<  \n");
+			error decode("UTF-8"," >>>>>>>>>>>>>>>> ขณะนี้เวลา  $now <<<<<<<<<<<<<<<<  \n");
+			alarm_task();
+		}
+	}
+	#update
+	($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+}
+sub alarm_task {
+	my $command = shift(@command_alarm_task);
+	warning decode("UTF-8"," ||||||||||||||||||||||||||||| พยายาม ใช้คำสั่ง $command |||||||||||||||||||||||||||||  \n");
+	if(!$config{alarm_opk_quit} && $command eq "quit") {
+		return;
+	}
+	Commands::run($command);
+}
 sub cmdKSr_on {
 	$ignorePasswd = 0;
 	message "Password reset WILL TRIGGER \n";
@@ -332,16 +411,7 @@ sub core_start3 {
 	message sprintf("Loading %s... \n", 'control-koreshield/koreShield.txt');
 	&RevokUtils::Parsers::parseSectionedFile('control-koreshield/koreShield.txt', \%core_databases);
 	%core_config = &RevokUtils::Parsers::parseConfigArray(\@{$core_databases{CONFIG}});
-	message sprintf("GM DB size: %s \n", scalar @{$core_databases{GMIDS}});
-	
-	############ create koreshield in config.txt ############
-	if($config{koreShield} eq ""){
-		main::configModify('koreShield',1, 2);
-		message "Created koreShield enable status \n";
-		message "Default koreShield enable is  ".$config{koreShield}." \n";
-	}else {
-		message "Default koreShield enable is  ".$config{koreShield}." \n";
-	}
+	message sprintf("GM DB size: %s \n", scalar @{$core_databases{GMIDS}});	
 	
 }
 sub cmdReload {
@@ -799,7 +869,6 @@ sub detectGM_handleLogin {
 }
 
 sub ping_checkIds {
-	
 	######################### Taking rest ###############
 	if(time > $RestingTimeout && $BotSleepCouter > 0 && $ReportCount > 0){		
 		$RestingTimeout = time + 1;
@@ -1392,7 +1461,6 @@ sub AfterRespawn{
 	#counting
 	$AfterRespawn_i++;
 }
-
 sub T {
 	return sprintf @_;
 }
