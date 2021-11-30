@@ -196,6 +196,7 @@ my $commands_hooks = Commands::register(
 my $myHooks = Plugins::addHooks(
 	
 	['start3',	\&core_start3],
+	['initialized',\&initialized_config],
 	#['AI_post', 								\&IngameDangerous],
 	# core
 	['packet/received_character_ID_and_Map',	\&core_mapServerInfo],
@@ -302,6 +303,50 @@ my $AfterRespawn_i = 0;
 if ($::net) {
  core_start3();
 }
+sub initialized_config {
+	############ create koreshield in config.txt ############
+	if($config{koreShield} eq ""){
+		main::configModify('koreShield',1, 2);
+		message "Created koreShield enable status \n";
+		message "Default koreShield enable is  ".$config{koreShield}." \n";
+	}else {
+		message "Default koreShield enable is  ".$config{koreShield}." \n";
+	}
+	############ create koreshield alarm_disable in config.txt ############
+	if($config{alarm_disable} eq ""){
+		main::configModify('alarm_disable',0, 2);
+		Log::message "Created alarm_disable enable status \n";
+		Log::message "Default alarm_disable enable is  ".$config{fast_take_item}." \n";
+	}else {
+		Log::message "Default alarm_disable enable is  ".$config{fast_take_item}." \n";
+	}
+	
+	############ create koreshield alarm_time in config.txt ############
+	if($config{alarm_time} eq ""){
+		main::configModify('alarm_time',"", 2);
+		Log::message "Created alarm_time enable status \n";
+		Log::message "Default alarm_time enable is  ".$config{fast_take_item}." \n";
+	}else {
+		Log::message "Default alarm_time enable is  ".$config{fast_take_item}." \n";
+	}
+	############ create koreshield maintenance_date in config.txt ############
+	if($config{maintenance_date} eq ""){
+		main::configModify('maintenance_date',"", 2);
+		Log::message "Created maintenance_date enable status \n";
+		Log::message "Default maintenance_date enable is  ".$config{fast_take_item}." \n";
+	}else {
+		Log::message "Default maintenance_date enable is  ".$config{fast_take_item}." \n";
+	}
+	
+	############ create koreshield maintenance_date in config.txt ############
+	if($config{alarm_opk_quit} eq ""){
+		main::configModify('alarm_opk_quit',1, 2);
+		Log::message "Created alarm_opk_quit enable status \n";
+		Log::message "Default alarm_opk_quit enable is  ".$config{fast_take_item}." \n";
+	}else {
+		Log::message "Default alarm_opk_quit enable is  ".$config{fast_take_item}." \n";
+	}
+}
 my $alarm_time = time;
 my @command_alarm_task = ("tele", "tele", "tele", "charselect", "charselect", "charselect", "charselect", "charselect", "charselect", "charselect","quit");
 sub Alarm_me {
@@ -366,50 +411,7 @@ sub core_start3 {
 	message sprintf("Loading %s... \n", 'control-koreshield/koreShield.txt');
 	&RevokUtils::Parsers::parseSectionedFile('control-koreshield/koreShield.txt', \%core_databases);
 	%core_config = &RevokUtils::Parsers::parseConfigArray(\@{$core_databases{CONFIG}});
-	message sprintf("GM DB size: %s \n", scalar @{$core_databases{GMIDS}});
-	
-	############ create koreshield in config.txt ############
-	if($config{koreShield} eq ""){
-		main::configModify('koreShield',1, 2);
-		message "Created koreShield enable status \n";
-		message "Default koreShield enable is  ".$config{koreShield}." \n";
-	}else {
-		message "Default koreShield enable is  ".$config{koreShield}." \n";
-	}
-	############ create koreshield alarm_disable in config.txt ############
-	if($config{alarm_disable} eq ""){
-		main::configModify('alarm_disable',0, 2);
-		Log::message "Created alarm_disable enable status \n";
-		Log::message "Default alarm_disable enable is  ".$config{fast_take_item}." \n";
-	}else {
-		Log::message "Default alarm_disable enable is  ".$config{fast_take_item}." \n";
-	}
-	
-	############ create koreshield alarm_time in config.txt ############
-	if($config{alarm_time} eq ""){
-		main::configModify('alarm_time',"", 2);
-		Log::message "Created alarm_time enable status \n";
-		Log::message "Default alarm_time enable is  ".$config{fast_take_item}." \n";
-	}else {
-		Log::message "Default alarm_time enable is  ".$config{fast_take_item}." \n";
-	}
-	############ create koreshield maintenance_date in config.txt ############
-	if($config{maintenance_date} eq ""){
-		main::configModify('maintenance_date',"", 2);
-		Log::message "Created maintenance_date enable status \n";
-		Log::message "Default maintenance_date enable is  ".$config{fast_take_item}." \n";
-	}else {
-		Log::message "Default maintenance_date enable is  ".$config{fast_take_item}." \n";
-	}
-	
-	############ create koreshield maintenance_date in config.txt ############
-	if($config{alarm_opk_quit} eq ""){
-		main::configModify('alarm_opk_quit',1, 2);
-		Log::message "Created alarm_opk_quit enable status \n";
-		Log::message "Default alarm_opk_quit enable is  ".$config{fast_take_item}." \n";
-	}else {
-		Log::message "Default alarm_opk_quit enable is  ".$config{fast_take_item}." \n";
-	}	
+	message sprintf("GM DB size: %s \n", scalar @{$core_databases{GMIDS}});	
 	
 }
 sub cmdReload {
