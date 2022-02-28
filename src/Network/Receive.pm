@@ -3944,7 +3944,6 @@ sub login_pin_code_request {
 		message T("PIN code is correct.\n"), "success";
 	} elsif ($args->{flag} == 1) {
 		# PIN code query request.
-		sleep(3);
 		$accountID = $args->{accountID};
 		debug sprintf("Account ID: %s (%s)\n", unpack('V',$accountID), getHex($accountID));
 
